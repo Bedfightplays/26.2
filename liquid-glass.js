@@ -8,9 +8,9 @@
   svg.style.cssText = 'position:fixed;width:0;height:0;overflow:hidden;pointer-events:none';
   svg.innerHTML = `
     <filter id="liquidGlassRefraction" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.011" numOctaves="1" seed="8" result="lensMap"/>
-      <feGaussianBlur in="lensMap" stdDeviation="1.2" result="softLensMap"/>
-      <feDisplacementMap in="SourceGraphic" in2="softLensMap" scale="-17" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.0035 0.0045" numOctaves="1" seed="8" result="lensMap"/>
+      <feGaussianBlur in="lensMap" stdDeviation="4.2" result="softLensMap"/>
+      <feDisplacementMap in="SourceGraphic" in2="softLensMap" scale="-34" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
       <feColorMatrix in="refracted" type="saturate" values="1.18"/>
     </filter>`;
   document.body.prepend(svg);
