@@ -457,3 +457,122 @@ body.light-mode.lg-refraction-supported .lg-surface {
   :root { --lg-blur: 11px; }
   body.light-mode .lg-surface { -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3); }
 }
+
+/* Pass 6: softer edges, stronger refraction, fresh accessible button palette */
+:root {
+  --lg-edge: rgba(225,239,255,.19);
+  --lg-edge-soft: rgba(205,225,250,.095);
+  --lg-tint: rgba(180,210,245,.055);
+  --lg-blur: 12px;
+  --lg-accent: #57e6d0;
+  --lg-accent-2: #82b7ff;
+  --lg-ink-on-accent: #071b27;
+  --lg-button-glass: rgba(28,43,62,.78);
+  --lg-button-border: rgba(177,205,238,.18);
+}
+.lg-surface {
+  border-color: var(--lg-edge-soft) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.12), inset 0 -1px 0 rgba(255,255,255,.025) !important;
+}
+.lg-surface::after {
+  background: linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,.035) 27%,transparent 53%,rgba(135,195,255,.08) 78%,rgba(255,255,255,.10)) !important;
+  opacity: .42 !important;
+}
+.lg-surface::before {
+  background: linear-gradient(150deg,rgba(255,255,255,.095),rgba(255,255,255,.018) 27%,transparent 58%,rgba(80,175,230,.04)) !important;
+  opacity: .82 !important;
+}
+.lg-surface:hover {
+  border-color: rgba(200,225,255,.26) !important;
+  box-shadow: 0 16px 38px rgba(0,0,0,.19), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+/* Teal-to-blue primary actions and calm slate secondary controls. */
+.btn-primary,.channel-link,.filter-btn.active,.filter-btn[aria-pressed="true"] {
+  color: var(--lg-ink-on-accent) !important;
+  background: linear-gradient(118deg,var(--lg-accent),var(--lg-accent-2)) !important;
+  border: 1px solid rgba(195,250,246,.32) !important;
+  box-shadow: 0 7px 20px rgba(58,190,195,.15),inset 0 1px 0 rgba(255,255,255,.24) !important;
+  text-shadow: none !important;
+}
+.btn-primary:hover,.channel-link:hover,.filter-btn.active:hover,.filter-btn[aria-pressed="true"]:hover {
+  filter: brightness(1.055) !important;
+  box-shadow: 0 10px 24px rgba(58,190,195,.22),inset 0 1px 0 rgba(255,255,255,.28) !important;
+}
+.btn-secondary,.filter-btn,.theme-toggle,.btn:not(.btn-primary) {
+  color: #e7f0fb !important;
+  background: var(--lg-button-glass) !important;
+  border: 1px solid var(--lg-button-border) !important;
+  box-shadow: 0 5px 16px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.09) !important;
+}
+.btn-secondary:hover,.filter-btn:hover,.theme-toggle:hover,.btn:not(.btn-primary):hover {
+  background: rgba(55,77,103,.86) !important;
+  border-color: rgba(130,183,255,.35) !important;
+}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible {
+  outline: 2px solid var(--lg-accent-2) !important;
+  outline-offset: 3px;
+}
+body:not(.light-mode) { color: #edf3fb; }
+body:not(.light-mode) :is(p,li,label,.text-muted,.video-date,.hero-subtitle,.client-card p,.wide-card p,.about-section p,.feature-card p,.card p,.page > p,.no-results) { color: #c4d0e0; }
+body:not(.light-mode) :is(h1,h2,h3,h4,h5,h6,.logo,.video-title h3,.client-card h2,.wide-card h3) { color: #f2f6fc; }
+body:not(.light-mode) :is(.page h1,.about-section h2,.video-error h2,.card-link,.inline-link) { color: #73e8d7; }
+/* Comfortable light mode: soft blue-grey surfaces and restrained highlights. */
+html.light-mode,html:has(body.light-mode) { color-scheme: light; }
+body.light-mode {
+  --lg-tint: rgba(255,255,255,.43);
+  --lg-tint-strong: rgba(255,255,255,.60);
+  --lg-edge: rgba(80,105,135,.17);
+  --lg-edge-soft: rgba(65,88,116,.13);
+  --lg-accent: #167b78;
+  --lg-accent-2: #315fa5;
+  --lg-ink-on-accent: #ffffff;
+  --lg-button-glass: rgba(235,241,249,.90);
+  --lg-button-border: rgba(63,87,115,.18);
+  color: #1c2a3a;
+}
+body.light-mode .lg-surface {
+  background: rgba(255,255,255,.44) !important;
+  color: #1c2a3a !important;
+  border-color: rgba(65,88,116,.13) !important;
+  box-shadow: 0 10px 28px rgba(45,65,90,.075),inset 0 1px 0 rgba(255,255,255,.72) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(1.18);
+  backdrop-filter: blur(15px) saturate(1.18);
+}
+body.light-mode .lg-surface::before {
+  background: linear-gradient(150deg,rgba(255,255,255,.40),rgba(255,255,255,.07) 32%,transparent 67%,rgba(100,145,190,.045)) !important;
+  opacity: .72 !important;
+}
+body.light-mode .lg-surface::after {
+  background: linear-gradient(135deg,rgba(255,255,255,.48),rgba(255,255,255,.06) 26%,transparent 55%,rgba(100,145,190,.07) 80%,rgba(255,255,255,.18)) !important;
+  opacity: .34 !important;
+}
+body.light-mode :is(p,li,label,.text-muted,.video-date,.hero-subtitle,.client-card p,.wide-card p,.about-section p,.feature-card p,.card p,.page > p,.no-results) { color: #4b5b6d !important; }
+body.light-mode :is(h1,h2,h3,h4,h5,h6,.logo,.video-title h3,.client-card h2,.wide-card h3) { color: #1d2b3b; }
+body.light-mode :is(.page h1,.about-section h2,.video-error h2,.card-link,.inline-link) { color: #176d75; }
+body.light-mode .btn-secondary,body.light-mode .filter-btn,body.light-mode .theme-toggle,body.light-mode .btn:not(.btn-primary) {
+  color: #26384b !important;
+  background: rgba(236,242,249,.90) !important;
+  border-color: rgba(63,87,115,.18) !important;
+  box-shadow: 0 4px 14px rgba(35,55,80,.06),inset 0 1px 0 rgba(255,255,255,.8) !important;
+}
+body.light-mode .btn-secondary:hover,body.light-mode .filter-btn:hover,body.light-mode .theme-toggle:hover,body.light-mode .btn:not(.btn-primary):hover {
+  color: #183047 !important;
+  background: rgba(222,233,245,.98) !important;
+}
+body.light-mode .btn-primary,body.light-mode .channel-link,body.light-mode .filter-btn.active,body.light-mode .filter-btn[aria-pressed="true"] {
+  color: #fff !important;
+  background: linear-gradient(118deg,#167b78,#315fa5) !important;
+  border-color: rgba(35,80,125,.22) !important;
+}
+html.lg-refraction-supported .lg-surface {
+  -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.72);
+  backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.72);
+}
+html.light-mode.lg-refraction-supported .lg-surface,html:has(body.light-mode).lg-refraction-supported .lg-surface {
+  -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.18);
+  backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.18);
+}
+@media(max-width:700px) {
+  :root { --lg-blur: 10px; }
+  body.light-mode .lg-surface { -webkit-backdrop-filter: blur(12px) saturate(1.12); backdrop-filter: blur(12px) saturate(1.12); }
+}
