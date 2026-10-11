@@ -126,3 +126,56 @@ body > nav {
 }
 /* Gentle displacement bends the reflected highlight itself, suggesting optical thickness. */
 .lg-svg-filter-supported .lg-surface::before { filter: url(#liquidGlassRefraction); }
+
+
+/* === Pass 2: make the material visibly translucent ===
+   Explicitly override legacy card fills (including .card1–.card4), which otherwise
+   paint opaque gradients over the glass material. */
+:root {
+  --lg-tint: rgba(210, 232, 255, .035);
+  --lg-tint-strong: rgba(210, 232, 255, .075);
+  --lg-edge: rgba(255, 255, 255, .42);
+  --lg-edge-soft: rgba(255, 255, 255, .16);
+  --lg-blur: 13px;
+}
+body.light-mode {
+  --lg-tint: rgba(255, 255, 255, .20);
+  --lg-tint-strong: rgba(255, 255, 255, .32);
+  --lg-edge: rgba(255, 255, 255, .72);
+  --lg-edge-soft: rgba(35, 55, 75, .14);
+}
+.navbar, .navbar .theme-toggle, .glass-card, .card, .card1, .card2, .card3, .card4,
+.experience-panel, .feature-card, .panel, .youtube-embed-panel, .video-error,
+.video-card, .filter-btn, .yt-card, .split-card, .player-box, .cta-inner,
+.stat, .hero-badge, .tag, .status, .btn, .theme-toggle, .lg-surface {
+  background: var(--lg-tint) !important;
+  background-image: none;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(1.85) contrast(1.04);
+  backdrop-filter: blur(var(--lg-blur)) saturate(1.85) contrast(1.04);
+  border-color: var(--lg-edge-soft);
+}
+.navbar, body > nav {
+  background: rgba(190, 220, 255, .055) !important;
+  border: 1px solid var(--lg-edge) !important;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 14px 44px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.36), inset 0 -1px 0 rgba(255,255,255,.08);
+}
+.card::before, .navbar::before, .glass-card::before, .lg-surface::before {
+  z-index: 0;
+  opacity: 1;
+  background:
+    radial-gradient(125% 110% at var(--lg-x, 20%) var(--lg-y, 0%), rgba(255,255,255,.20), transparent 43%),
+    linear-gradient(145deg, rgba(255,255,255,.12), transparent 30%, transparent 72%, rgba(160,220,255,.055));
+}
+.card::after, .navbar::after, .glass-card::after, .lg-surface::after { z-index: 0; }
+.card > *, .navbar > *, .glass-card > *, .lg-surface > * { position: relative; z-index: 1; }
+.theme-toggle, .btn, .filter-btn, .hero-badge, .tag, .status { border-radius: 999px; }
+.card1, .card2, .card3, .card4 {
+  background: rgba(225,240,255,.035) !important;
+}
+body.light-mode .navbar, body.light-mode > nav {
+  background: rgba(255,255,255,.30) !important;
+}
+body.light-mode .card1, body.light-mode .card2, body.light-mode .card3, body.light-mode .card4 {
+  background: rgba(255,255,255,.24) !important;
+}
