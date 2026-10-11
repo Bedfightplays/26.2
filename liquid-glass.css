@@ -361,3 +361,99 @@ body.light-mode .lg-surface.wide-card { color: #15202b; }
   -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
   backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
 }
+
+
+/* === Pass 5: SVG backdrop refraction + brighter backdrop + reliable light mode === */
+:root {
+  --lg-tint: rgba(205, 225, 250, .055);
+  --lg-tint-strong: rgba(205, 225, 250, .095);
+  --lg-edge: rgba(240, 248, 255, .38);
+  --lg-edge-soft: rgba(225, 239, 255, .19);
+  --lg-blur: 13px;
+}
+html { color-scheme: dark; }
+html.light-mode, html:has(body.light-mode) { color-scheme: light; }
+body {
+  background-color: var(--bg);
+}
+.animated-bg {
+  background:
+    radial-gradient(ellipse at 14% 12%, rgba(0, 255, 191, .075), transparent 40%),
+    radial-gradient(ellipse at 88% 46%, rgba(0, 153, 255, .085), transparent 42%),
+    var(--bg) !important;
+}
+.gradient-orb { opacity: .42; }
+body.light-mode {
+  --lg-tint: rgba(255, 255, 255, .38);
+  --lg-tint-strong: rgba(255, 255, 255, .52);
+  --lg-edge: rgba(255, 255, 255, .88);
+  --lg-edge-soft: rgba(52, 75, 100, .17);
+}
+body.light-mode .animated-bg {
+  background:
+    radial-gradient(ellipse at 12% 10%, rgba(0, 190, 155, .11), transparent 40%),
+    radial-gradient(ellipse at 88% 42%, rgba(45, 135, 235, .12), transparent 44%),
+    #edf3fa !important;
+}
+body.light-mode .lg-surface {
+  background: rgba(255,255,255,.38) !important;
+  color: #182433;
+  border-color: rgba(55,78,102,.16) !important;
+  box-shadow: 0 12px 34px rgba(35,55,80,.10), inset 0 1px 0 rgba(255,255,255,.94), inset 0 -1px 0 rgba(40,60,85,.045) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(1.35);
+  backdrop-filter: blur(15px) saturate(1.35);
+}
+body.light-mode .lg-surface::before {
+  background: linear-gradient(150deg, rgba(255,255,255,.70), rgba(255,255,255,.16) 28%, transparent 62%, rgba(130,180,225,.10)) !important;
+  opacity: .9;
+}
+body.light-mode .lg-surface::after {
+  background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.24) 28%, transparent 54%, rgba(120,160,205,.17) 78%, rgba(255,255,255,.60)) !important;
+  opacity: .72;
+}
+body.light-mode .navbar,
+body.light-mode > nav {
+  background: rgba(245,249,255,.66) !important;
+}
+body.light-mode .navbar nav a,
+body.light-mode .logo,
+body.light-mode .page h1,
+body.light-mode .page h2,
+body.light-mode .page h3,
+body.light-mode .client-card h2,
+body.light-mode .wide-card,
+body.light-mode .hero-subtitle,
+body.light-mode .card h2,
+body.light-mode .card p,
+body.light-mode .about-section,
+body.light-mode footer {
+  color: var(--text);
+}
+body.light-mode .client-card p,
+body.light-mode .wide-card p,
+body.light-mode .page > p,
+body.light-mode .text-muted {
+  color: var(--text-muted);
+}
+body.light-mode .theme-toggle {
+  color: #126b62;
+  background: rgba(255,255,255,.64) !important;
+}
+body.light-mode .client-card:is(.eb,.modern,.tuff,.resent,.launcher),
+body.light-mode .wide-card:is(.youtube,.discord,.reddit,.instagram,.twitter) {
+  background-color: rgba(255,255,255,.42) !important;
+}
+/* SVG lens filter is applied to the pixels behind each glass element on Chromium.
+   Other engines keep the high-quality blur/tint fallback instead. */
+.lg-refraction-supported .lg-surface {
+  -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.8);
+  backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.8);
+}
+body.light-mode.lg-refraction-supported .lg-surface {
+  -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.35);
+  backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.35);
+}
+@media (max-width: 700px) {
+  :root { --lg-blur: 11px; }
+  body.light-mode .lg-surface { -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3); }
+}
