@@ -1,29 +1,46 @@
-/* Liquid Glass interactions and progressive SVG refraction enhancement. */
+/* Liquid Glass v2: pointer-reactive reflections and progressive backdrop refraction.
+   Browsers without SVG backdrop-filter support retain the transparent glass fallback. */
 (() => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS, 'svg');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('aria-hidden', 'true');
-  svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;pointer-events:none';
-  svg.innerHTML = `<filter id="liquidGlassRefraction" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="8" result="noise"/>
-    <feGaussianBlur in="noise" stdDeviation="1.1" result="softNoise"/>
-    <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="5.5" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>`;
+  svg.setAttribute('focusable', 'false');
+  svg.style.cssText = 'position:fixed;width:0;height:0;overflow:hidden;pointer-events:none';
+  svg.innerHTML = `
+    <filter id="liquidGlassRefraction" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="glassNoise"/>
+      <feGaussianBlur in="glassNoise" stdDeviation="1.15" result="softNoise"/>
+      <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>`;
   document.body.prepend(svg);
-  const surfaces = document.querySelectorAll('.navbar, body > nav, .glass-card, .card, .experience-panel, .feature-card, .theme-toggle, .btn, .panel, .yt-card, .split-card, .player-box, .cta-inner, .stat, .hero-badge, .tag, .status');
-  surfaces.forEach(el => {
+
+  const canRefractBackdrop = CSS.supports('backdrop-filter', 'url(#liquidGlassRefraction)');
+  if (canRefractBackdrop) document.documentElement.classList.add('lg-refraction-supported');
+
+  const selector = [
+    '.navbar', 'body > nav', '.glass-card', '.card', '.card1', '.card2', '.card3', '.card4',
+    '.experience-panel', '.feature-card', '.theme-toggle', '.btn', '.panel',
+    '.youtube-embed-panel', '.video-error', '.video-card', '.filter-btn',
+    '.yt-card', '.split-card', '.player-box', '.cta-inner', '.stat',
+    '.hero-badge', '.tag', '.status', '.social-card', '.resource-card'
+  ].join(',');
+  document.querySelectorAll(selector).forEach(el => {
     el.classList.add('lg-surface');
-    if (!reduceMotion) {
+    if (!reduceMotion && matchMedia('(hover: hover) and (pointer: fine)').matches) {
       el.addEventListener('pointermove', event => {
-        const r = el.getBoundingClientRect();
-        el.style.setProperty('--lg-x', Math.max(0, Math.min(100, ((event.clientX-r.left)/r.width)*100))+'%');
-        el.style.setProperty('--lg-y', Math.max(0, Math.min(100, ((event.clientY-r.top)/r.height)*100))+'%');
-      }, {passive:true});
+        const rect = el.getBoundingClientRect();
+        const px = Math.max(0, Math.min(100, (event.clientX - rect.left) / rect.width * 100));
+        const py = Math.max(0, Math.min(100, (event.clientY - rect.top) / rect.height * 100));
+        el.style.setProperty('--lg-x', px + '%');
+        el.style.setProperty('--lg-y', py + '%');
+        el.style.setProperty('--lg-angle', (Math.atan2(py - 50, px - 50) * 180 / Math.PI) + 'deg');
+      }, { passive: true });
       el.addEventListener('pointerleave', () => {
-        el.style.setProperty('--lg-x','18%'); el.style.setProperty('--lg-y','0%');
-      }, {passive:true});
+        el.style.setProperty('--lg-x', '18%');
+        el.style.setProperty('--lg-y', '0%');
+        el.style.removeProperty('--lg-angle');
+      }, { passive: true });
     }
   });
-  if (CSS.supports('filter','url(#liquidGlassRefraction)')) document.documentElement.classList.add('lg-svg-filter-supported');
 })();
