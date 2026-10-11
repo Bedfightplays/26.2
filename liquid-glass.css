@@ -351,3 +351,13 @@ body.light-mode .lg-surface.wide-card { color: #15202b; }
 @media (prefers-reduced-motion: reduce) {
   .lg-surface { transition: none !important; }
 }
+
+/* Small metric tiles and the standalone creator footer use the same material. */
+.lg-surface:is(footer, .footer, .hero-stats > div) {
+  background: var(--lg-tint) !important;
+  background-image: none !important;
+  border: 1px solid var(--lg-edge-soft);
+  border-radius: 18px;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
+  backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
+}
