@@ -179,3 +179,67 @@ body.light-mode .navbar, body.light-mode > nav {
 body.light-mode .card1, body.light-mode .card2, body.light-mode .card3, body.light-mode .card4 {
   background: rgba(255,255,255,.24) !important;
 }
+
+
+/* === Pass 3: stronger material definition and true-backdrop-filter attempt === */
+:root {
+  --lg-tint: rgba(218, 235, 255, .025);
+  --lg-tint-strong: rgba(218, 235, 255, .055);
+  --lg-blur: 11px;
+}
+body.light-mode {
+  --lg-tint: rgba(255, 255, 255, .16);
+  --lg-tint-strong: rgba(255, 255, 255, .26);
+}
+.lg-surface {
+  background-color: var(--lg-tint) !important;
+  background-image: none;
+  border: 1px solid var(--lg-edge-soft);
+  box-shadow: 0 16px 48px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.25), inset 0 -1px 0 rgba(255,255,255,.035);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(1.9) contrast(1.035);
+  backdrop-filter: blur(var(--lg-blur)) saturate(1.9) contrast(1.035);
+}
+.lg-surface::before {
+  z-index: 0;
+  opacity: .95;
+  background:
+    radial-gradient(130% 120% at var(--lg-x, 18%) var(--lg-y, 0%), rgba(255,255,255,.19), transparent 42%),
+    linear-gradient(155deg, rgba(255,255,255,.13) 0%, rgba(255,255,255,.025) 20%, transparent 48%, rgba(140,205,255,.045) 76%, rgba(255,255,255,.07) 100%);
+}
+.lg-surface::after { z-index: 0; opacity: .88; }
+.lg-surface > * { position: relative; z-index: 1; }
+.lg-surface :is(img, video, iframe) { position: relative; z-index: 1; }
+.lg-surface:is(.card1,.card2,.card3,.card4) { background: rgba(218,235,255,.025) !important; }
+.lg-surface:is(.navbar, .theme-toggle, .btn, .filter-btn, .hero-badge, .tag, .status) {
+  border-radius: 999px;
+}
+.lg-surface:is(.navbar, body > nav) {
+  border-radius: 0 0 28px 28px;
+  background: rgba(190,220,255,.035) !important;
+}
+.lg-surface:is(.card, .glass-card, .panel, .youtube-embed-panel, .video-error,
+.video-card, .yt-card, .split-card, .player-box, .cta-inner, .experience-panel,
+.feature-card, .social-card, .resource-card) { overflow: hidden; }
+.lg-surface:hover {
+  border-color: rgba(255,255,255,.38);
+  box-shadow: 0 22px 60px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.32);
+}
+body.light-mode .lg-surface {
+  background-color: rgba(255,255,255,.17) !important;
+  box-shadow: 0 18px 48px rgba(30,50,75,.10), inset 0 1px 0 rgba(255,255,255,.85);
+}
+body.light-mode .lg-surface::before {
+  background:
+    radial-gradient(130% 120% at var(--lg-x, 18%) var(--lg-y, 0%), rgba(255,255,255,.66), transparent 42%),
+    linear-gradient(155deg, rgba(255,255,255,.48), rgba(255,255,255,.06) 34%, transparent 70%, rgba(125,175,220,.07));
+}
+/* Experimental actual backdrop displacement. This is enabled only when the browser
+   reports SVG url() support in backdrop-filter; otherwise blur/saturation is retained. */
+.lg-refraction-supported .lg-surface {
+  -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(11px) saturate(1.9);
+  backdrop-filter: url(#liquidGlassRefraction) blur(11px) saturate(1.9);
+}
+@media (max-width: 700px) {
+  :root { --lg-blur: 9px; }
+  .lg-surface:is(.navbar, body > nav) { border-radius: 0 0 20px 20px; }
+}
