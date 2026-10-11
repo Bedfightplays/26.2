@@ -243,3 +243,111 @@ body.light-mode .lg-surface::before {
   :root { --lg-blur: 9px; }
   .lg-surface:is(.navbar, body > nav) { border-radius: 0 0 20px 20px; }
 }
+
+
+/* === Pass 4: consistent Liquid Glass surfaces across every page ===
+   Static studio lighting replaces the distracting cursor-following white spot.
+   Real optical displacement is intentionally not claimed: CSS backdrop-filter
+   does not reliably refract the pixels behind an element across browsers. */
+:root {
+  --lg-tint: rgba(190, 215, 245, .045);
+  --lg-edge: rgba(235, 245, 255, .27);
+  --lg-edge-soft: rgba(220, 235, 255, .16);
+  --lg-blur: 18px;
+}
+body.light-mode {
+  --lg-tint: rgba(255, 255, 255, .28);
+  --lg-edge: rgba(255, 255, 255, .78);
+  --lg-edge-soft: rgba(50, 70, 90, .15);
+}
+.lg-surface {
+  position: relative;
+  isolation: isolate;
+  background: var(--lg-tint) !important;
+  background-image: none !important;
+  border: 1px solid var(--lg-edge-soft) !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.035) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
+  backdrop-filter: blur(var(--lg-blur)) saturate(1.65);
+  transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.lg-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(155deg, rgba(255,255,255,.13) 0%, rgba(255,255,255,.035) 16%, transparent 43%, transparent 72%, rgba(155,205,255,.045) 100%);
+  opacity: .85;
+}
+.lg-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,.48), rgba(255,255,255,.08) 24%, transparent 52%, rgba(175,215,255,.12) 76%, rgba(255,255,255,.20));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: .72;
+}
+.lg-surface > * { position: relative; z-index: 1; }
+.lg-surface:is(.navbar, body > nav) {
+  background: rgba(190,215,245,.055) !important;
+  border-color: var(--lg-edge) !important;
+}
+.lg-surface:is(.card, .glass-card, .client-card, .wide-card, .about-section, .video-card,
+.youtube-embed-panel, .video-error, .experience-panel, .feature-card, .panel, .yt-card,
+.split-card, .player-box, .cta-inner, .resource-card, .social-card) {
+  border-radius: 22px;
+  overflow: hidden;
+}
+.lg-surface:is(.client-card, .wide-card) {
+  padding: 24px 28px;
+  color: var(--text);
+  background-color: rgba(205,225,250,.045) !important;
+}
+.lg-surface.client-card:is(.eb) { background-color: rgba(0,180,216,.075) !important; }
+.lg-surface.client-card:is(.modern) { background-color: rgba(145,90,220,.075) !important; }
+.lg-surface.client-card:is(.tuff) { background-color: rgba(247,37,133,.065) !important; }
+.lg-surface.client-card:is(.resent) { background-color: rgba(42,157,143,.075) !important; }
+.lg-surface.client-card:is(.launcher) { background-color: rgba(252,163,17,.075) !important; }
+.lg-surface.wide-card:is(.youtube) { background-color: rgba(255,40,40,.055) !important; }
+.lg-surface.wide-card:is(.discord) { background-color: rgba(88,101,242,.065) !important; }
+.lg-surface.wide-card:is(.reddit) { background-color: rgba(255,69,0,.055) !important; }
+.lg-surface.wide-card:is(.instagram) { background-color: rgba(225,48,108,.055) !important; }
+.lg-surface.wide-card:is(.twitter) { background-color: rgba(29,161,242,.055) !important; }
+.lg-surface:is(.theme-toggle, .btn, .filter-btn, .hero-badge, .tag, .status, .channel-link) {
+  border-radius: 999px;
+}
+.lg-surface:is(.btn, .filter-btn, .theme-toggle, .client-card, .wide-card, .card, .channel-link) {
+  cursor: pointer;
+}
+.lg-surface:is(a, button):hover {
+  border-color: rgba(240,248,255,.42) !important;
+  box-shadow: 0 16px 38px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.28) !important;
+  filter: none;
+}
+.lg-surface:is(.client-card, .wide-card):hover { transform: translateY(-2px); }
+.lg-surface:is(a, button):active { transform: scale(.99); }
+body.light-mode .lg-surface {
+  background-color: rgba(255,255,255,.28) !important;
+  box-shadow: 0 12px 34px rgba(35,55,80,.09), inset 0 1px 0 rgba(255,255,255,.82) !important;
+}
+body.light-mode .lg-surface::before {
+  background: linear-gradient(155deg, rgba(255,255,255,.55), rgba(255,255,255,.12) 32%, transparent 70%, rgba(125,175,220,.06));
+}
+body.light-mode .lg-surface.client-card,
+body.light-mode .lg-surface.wide-card { color: #15202b; }
+.lg-surface :is(img, video, iframe) { position: relative; z-index: 1; }
+@media (max-width: 700px) {
+  :root { --lg-blur: 13px; }
+  .lg-surface:is(.client-card, .wide-card) { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-surface { transition: none !important; }
+}
