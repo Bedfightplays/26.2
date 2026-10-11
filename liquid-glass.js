@@ -7,7 +7,7 @@
     '.youtube-embed-panel', '.video-error', '.video-card', '.filter-btn',
     '.yt-card', '.split-card', '.player-box', '.cta-inner', '.stat',
     '.hero-badge', '.tag', '.status', '.social-card', '.resource-card',
-    '.client-card', '.wide-card', '.about-section', '.channel-link', '.footer'
+    '.client-card', '.wide-card', '.about-section', '.channel-link', '.footer', 'footer', '.hero-stats > div'
   ].join(',');
   document.querySelectorAll(selector).forEach(el => el.classList.add('lg-surface'));
 })();
