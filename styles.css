@@ -4,8 +4,8 @@
 :root {
   --primary: #00ffbf;
   --primary-dark: #00cc99;
-  --bg: #0b0b0b;
-  --bg-light: #1a1a1a;
+  --bg: #101722;
+  --bg-light: #202c3b;
   --text: #ffffff;
   --text-muted: #aaa;
   --glass-bg: rgba(255, 255, 255, 0.1);
@@ -15,7 +15,7 @@
 body.light-mode {
   --primary: #00cc99;
   --primary-dark: #009977;
-  --bg: #f5f5f5;
+  --bg: #f3f7fc;
   --bg-light: #ffffff;
   --text: #1a1a1a;
   --text-muted: #555;
