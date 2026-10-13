@@ -27,6 +27,7 @@ if (themeToggle) {
 
 function enableDarkMode() {
   body.classList.remove('light-mode');
+  document.documentElement.classList.remove('light-mode');
   if (themeToggle) {
     themeToggle.textContent = '🌙';
     themeToggle.title = 'Switch to light mode';
@@ -37,6 +38,7 @@ function enableDarkMode() {
 
 function enableLightMode() {
   body.classList.add('light-mode');
+  document.documentElement.classList.add('light-mode');
   if (themeToggle) {
     themeToggle.textContent = '☀️';
     themeToggle.title = 'Switch to dark mode';
