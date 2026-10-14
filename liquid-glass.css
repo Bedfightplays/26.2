@@ -578,32 +578,47 @@ html.light-mode.lg-refraction-supported .lg-lens-active,html:has(body.light-mode
 }
 
 
-/* Pass 7 — shape-aware lens maps over a vivid, wallpaper-like backdrop. */
+/* Wallpaper-ready liquid-glass backdrop.
+   Upload the preferred second wallpaper to /files/liquid-glass-wallpaper.png.
+   The gradients remain as a graceful fallback if the image is not uploaded yet. */
 body::before {
-  content:""; position:fixed; inset:-8%; z-index:-1; pointer-events:none;
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
   background:
+    linear-gradient(145deg,rgba(4,12,32,.18),rgba(7,12,36,.10)),
+    url("files/liquid-glass-wallpaper.png"),
     radial-gradient(ellipse at 18% 18%,rgba(39,245,208,.56) 0%,transparent 31%),
     radial-gradient(ellipse at 78% 22%,rgba(83,112,255,.58) 0%,transparent 34%),
     radial-gradient(ellipse at 66% 78%,rgba(178,67,255,.43) 0%,transparent 35%),
     radial-gradient(ellipse at 18% 86%,rgba(255,107,164,.28) 0%,transparent 31%),
     linear-gradient(145deg,#071323 0%,#101b3a 48%,#101025 100%);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
   transform:translateZ(0);
 }
 .animated-bg { background:transparent !important; opacity:.92; }
-.gradient-orb { opacity:.38; filter:blur(92px); }
+.gradient-orb { opacity:.22; filter:blur(92px); }
 .orb-1 { background:linear-gradient(135deg,#37f5d0,#35a8ff); }
 .orb-2 { background:linear-gradient(135deg,#657bff,#a66bff); }
 .orb-3 { background:linear-gradient(135deg,#ff7ba8,#56d9ff); }
 body.light-mode::before {
   background:
+    linear-gradient(145deg,rgba(244,248,255,.44),rgba(248,245,255,.38)),
+    url("files/liquid-glass-wallpaper.png"),
     radial-gradient(ellipse at 18% 18%,rgba(86,218,193,.32) 0%,transparent 34%),
     radial-gradient(ellipse at 78% 22%,rgba(111,154,230,.30) 0%,transparent 35%),
     radial-gradient(ellipse at 66% 78%,rgba(177,143,225,.22) 0%,transparent 36%),
     radial-gradient(ellipse at 18% 86%,rgba(241,165,190,.17) 0%,transparent 32%),
     linear-gradient(145deg,#edf4fb 0%,#e8eef8 48%,#f3eff8 100%);
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
 }
 body.light-mode .animated-bg { opacity:.5; }
-body.light-mode .gradient-orb { opacity:.18; }
+body.light-mode .gradient-orb { opacity:.12; }
+@media (max-width:700px) {
+  body::before, body.light-mode::before { background-position:center center; }
+}
 /* Remove opaque legacy card gradients so the backdrop can actually bend through glass. */
 :is(.glass-card,.card,.experience-panel,.feature-card,.client-card,.wide-card,.social-card,
 .resource-card,.yt-card,.video-card,.panel,.about-section,.youtube-embed-panel,
