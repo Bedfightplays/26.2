@@ -35,27 +35,22 @@
     filter.setAttribute('height', '124%');
     filter.setAttribute('color-interpolation-filters', 'sRGB');
 
-    // Tuned turbulence + subtle blur to produce a smoother, thicker "liquid" lens.
     const noise = document.createElementNS(svgNS, 'feTurbulence');
     noise.setAttribute('type', 'fractalNoise');
-    // slightly lower frequency for larger, softer waves that match the reference image
-    noise.setAttribute('baseFrequency', '0.009 0.014');
-    noise.setAttribute('numOctaves', '2');
+    noise.setAttribute('baseFrequency', '0.018 0.028');
+    noise.setAttribute('numOctaves', '3');
     noise.setAttribute('seed', '7');
     noise.setAttribute('result', 'lensMap');
 
-    // Smooth the turbulence map so refraction feels more glassy and less grainy
     const blur = document.createElementNS(svgNS, 'feGaussianBlur');
     blur.setAttribute('in', 'lensMap');
-    blur.setAttribute('stdDeviation', '1');
+    blur.setAttribute('stdDeviation', '1.5');
     blur.setAttribute('result', 'lensBlur');
 
-    // Displace the source graphic using the smoothed turbulence map.
     const displacement = document.createElementNS(svgNS, 'feDisplacementMap');
     displacement.setAttribute('in', 'SourceGraphic');
     displacement.setAttribute('in2', 'lensBlur');
-    // scale gives the strength of the warp; 14 is noticeable but tasteful
-    displacement.setAttribute('scale', '14');
+    displacement.setAttribute('scale', '22');
     displacement.setAttribute('xChannelSelector', 'R');
     displacement.setAttribute('yChannelSelector', 'G');
 
@@ -67,11 +62,9 @@
 
   function init() {
     const root = document.documentElement;
-    // ensure every surface gets the lg-surface helper class
     const surfaces = Array.from(document.querySelectorAll(surfaceSelectors));
     surfaces.forEach(el => el.classList.add('lg-surface'));
 
-    // Chromium-only progressive enhancement. Other browsers keep the CSS glass fallback.
     const isChromium = /Chrome|Chromium|Edg\//.test(navigator.userAgent) && !/OPR\//.test(navigator.userAgent);
     const supportsBlur = window.CSS && CSS.supports && CSS.supports('backdrop-filter', 'blur(1px)');
 
@@ -82,15 +75,11 @@
 
     addFilter();
 
-    // Controller to enable/disable heavy SVG refraction based on mode
     function applyMode(mode) {
-      // safety: on very low-end devices prefer frosted mode regardless
       const deviceMemory = navigator.deviceMemory || 0;
       const cores = navigator.hardwareConcurrency || 0;
-      if (mode === 'liquid' && (deviceMemory && deviceMemory < 1.5 || cores && cores < 2)) {
-        // force fallback on very constrained devices
+      if (mode === 'liquid' && ((deviceMemory && deviceMemory < 1.5) || (cores && cores < 2))) {
         mode = 'frosted';
-        console.info('Liquid glass disabled on low-memory/low-core device — using frosted fallback');
       }
 
       if (mode === 'liquid') {
@@ -102,24 +91,20 @@
       }
     }
 
-    // initial mode read from localStorage (set by theme.js UI)
     const initialMode = localStorage.getItem('glass') || 'liquid';
     applyMode(initialMode);
 
-    // react to UI toggle events inside the page
     window.addEventListener('glass-mode-change', (e) => {
       const mode = (e && e.detail) ? e.detail : (localStorage.getItem('glass') || 'liquid');
       applyMode(mode);
     });
 
-    // react to storage events from other tabs
     window.addEventListener('storage', (e) => {
       if (e.key === 'glass') {
         applyMode(e.newValue || 'liquid');
       }
     });
 
-    // expose a simple programmatic API for debugging or future use
     root.liquidGlass = root.liquidGlass || {};
     root.liquidGlass.applyMode = applyMode;
   }
