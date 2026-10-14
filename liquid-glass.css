@@ -576,3 +576,64 @@ html.light-mode.lg-refraction-supported .lg-surface,html:has(body.light-mode).lg
   :root { --lg-blur: 10px; }
   body.light-mode .lg-surface { -webkit-backdrop-filter: blur(12px) saturate(1.12); backdrop-filter: blur(12px) saturate(1.12); }
 }
+
+
+/* Pass 7 — shape-aware lens maps over a vivid, wallpaper-like backdrop. */
+body::before {
+  content:""; position:fixed; inset:-8%; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 18% 18%,rgba(39,245,208,.56) 0%,transparent 31%),
+    radial-gradient(ellipse at 78% 22%,rgba(83,112,255,.58) 0%,transparent 34%),
+    radial-gradient(ellipse at 66% 78%,rgba(178,67,255,.43) 0%,transparent 35%),
+    radial-gradient(ellipse at 18% 86%,rgba(255,107,164,.28) 0%,transparent 31%),
+    linear-gradient(145deg,#071323 0%,#101b3a 48%,#101025 100%);
+  transform:translateZ(0);
+}
+.animated-bg { background:transparent !important; opacity:.92; }
+.gradient-orb { opacity:.38; filter:blur(92px); }
+.orb-1 { background:linear-gradient(135deg,#37f5d0,#35a8ff); }
+.orb-2 { background:linear-gradient(135deg,#657bff,#a66bff); }
+.orb-3 { background:linear-gradient(135deg,#ff7ba8,#56d9ff); }
+body.light-mode::before {
+  background:
+    radial-gradient(ellipse at 18% 18%,rgba(86,218,193,.32) 0%,transparent 34%),
+    radial-gradient(ellipse at 78% 22%,rgba(111,154,230,.30) 0%,transparent 35%),
+    radial-gradient(ellipse at 66% 78%,rgba(177,143,225,.22) 0%,transparent 36%),
+    radial-gradient(ellipse at 18% 86%,rgba(241,165,190,.17) 0%,transparent 32%),
+    linear-gradient(145deg,#edf4fb 0%,#e8eef8 48%,#f3eff8 100%);
+}
+body.light-mode .animated-bg { opacity:.5; }
+body.light-mode .gradient-orb { opacity:.18; }
+/* Remove opaque legacy card gradients so the backdrop can actually bend through glass. */
+:is(.glass-card,.card,.experience-panel,.feature-card,.client-card,.wide-card,.social-card,
+.resource-card,.yt-card,.video-card,.panel,.about-section,.youtube-embed-panel,
+.player-box,.stat,.cta-inner,.footer) {
+  background-image:none !important;
+  background-color:rgba(17,31,52,.22) !important;
+}
+body.light-mode :is(.glass-card,.card,.experience-panel,.feature-card,.client-card,.wide-card,
+.social-card,.resource-card,.yt-card,.video-card,.panel,.about-section,.youtube-embed-panel,
+.player-box,.stat,.cta-inner,.footer) { background-color:rgba(255,255,255,.34) !important; }
+/* Thin optical rim, not a bright white outline. */
+.lg-surface {
+  border-color:rgba(220,238,255,.12) !important;
+  box-shadow:0 18px 45px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(255,255,255,.035) !important;
+}
+.lg-surface::before {
+  background:linear-gradient(150deg,rgba(255,255,255,.14),rgba(255,255,255,.025) 25%,transparent 58%,rgba(105,195,255,.055)) !important;
+  opacity:.68 !important;
+}
+.lg-surface::after {
+  background:linear-gradient(135deg,rgba(255,255,255,.36),rgba(255,255,255,.045) 18%,transparent 48%,rgba(111,205,255,.12) 76%,rgba(255,255,255,.10)) !important;
+  opacity:.48 !important;
+}
+body.light-mode .lg-surface {
+  border-color:rgba(55,78,112,.14) !important;
+  box-shadow:0 12px 32px rgba(44,61,87,.08),inset 0 1px 0 rgba(255,255,255,.7) !important;
+}
+body.light-mode .lg-surface::before {
+  background:linear-gradient(150deg,rgba(255,255,255,.5),rgba(255,255,255,.08) 30%,transparent 66%,rgba(100,145,190,.04)) !important;
+}
+body.light-mode .lg-surface::after {
+  background:linear-gradient(135deg,rgba(255,255,255,.52),rgba(255,255,255,.05) 22%,transparent 55%,rgba(100,145,190,.08) 78%,rgba(255,255,255,.2)) !important;
+}
