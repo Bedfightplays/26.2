@@ -637,3 +637,28 @@ body.light-mode .lg-surface::before {
 body.light-mode .lg-surface::after {
   background:linear-gradient(135deg,rgba(255,255,255,.52),rgba(255,255,255,.05) 22%,transparent 55%,rgba(100,145,190,.08) 78%,rgba(255,255,255,.2)) !important;
 }
+
+
+/* Performance recovery: no SVG/RGB splitting, no blanket backdrop filters.
+   Keep a modest blur only on a few high-level glass surfaces; smaller cards and
+   controls use translucent fills and static edge lighting to avoid scroll jank. */
+html.lg-refraction-supported .lg-surface,
+html .lg-surface {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+html .lg-surface:is(.navbar, body > nav, .glass-card, .hero-card, .hero-panel, .hero-content, .cta-inner) {
+  -webkit-backdrop-filter: blur(7px) saturate(1.18) !important;
+  backdrop-filter: blur(7px) saturate(1.18) !important;
+}
+html .lg-surface::before,
+html .lg-surface::after {
+  filter: none !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html .lg-surface {
+    transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease !important;
+  }
+  html .lg-surface:is(.client-card, .wide-card):hover { transform: translateY(-1px); }
+}
