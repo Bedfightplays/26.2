@@ -4,14 +4,22 @@ const body = document.body;
 
 // Check for saved theme preference or default to dark mode
 const savedTheme = localStorage.getItem('theme') || 'dark';
+// Check for saved glass preference or default to 'liquid'
+const savedGlass = localStorage.getItem('glass') || 'liquid';
 
-// Apply saved theme on page load
+// Apply saved theme and glass mode on page load
 document.addEventListener('DOMContentLoaded', () => {
   if (savedTheme === 'light') {
     enableLightMode();
   } else {
     enableDarkMode();
   }
+
+  // Insert the glass toggle button next to the theme toggle if possible
+  setupGlassToggle(savedGlass);
+
+  // Broadcast initial glass mode so liquid-glass.js can respond
+  window.dispatchEvent(new CustomEvent('glass-mode-change', { detail: savedGlass }));
 });
 
 // Theme toggle button click handler
@@ -45,6 +53,67 @@ function enableLightMode() {
     themeToggle.setAttribute('aria-label', 'Switch to dark mode');
   }
   localStorage.setItem('theme', 'light');
+}
+
+// Glass toggle setup and handlers
+function setupGlassToggle(initialMode) {
+  // If there's already a button in the DOM, reuse it
+  let glassToggle = document.getElementById('glassToggle');
+
+  // Find a sane insert point: right after themeToggle if present, otherwise put it in the header
+  const header = document.querySelector('.navbar');
+
+  if (!glassToggle) {
+    glassToggle = document.createElement('button');
+    glassToggle.id = 'glassToggle';
+    glassToggle.className = 'theme-toggle';
+    glassToggle.style.marginLeft = '8px';
+    glassToggle.type = 'button';
+
+    // Insert after themeToggle if possible
+    if (themeToggle && themeToggle.parentNode) {
+      themeToggle.parentNode.insertBefore(glassToggle, themeToggle.nextSibling);
+    } else if (header) {
+      header.appendChild(glassToggle);
+    } else {
+      // fallback: append to body
+      document.body.appendChild(glassToggle);
+    }
+  }
+
+  function updateGlassButton(mode) {
+    if (!glassToggle) return;
+    if (mode === 'liquid') {
+      glassToggle.textContent = '🫧';
+      glassToggle.title = 'Liquid glass (refraction) — click to switch to frosted';
+      glassToggle.setAttribute('aria-label', 'Liquid glass (refraction) — click to switch to frosted');
+    } else {
+      glassToggle.textContent = '❄️';
+      glassToggle.title = 'Frosted glass (backdrop blur) — click to switch to liquid';
+      glassToggle.setAttribute('aria-label', 'Frosted glass (backdrop blur) — click to switch to liquid');
+    }
+  }
+
+  // Initialize UI
+  updateGlassButton(initialMode);
+
+  // Click handler toggles between 'liquid' and 'frosted'
+  glassToggle.addEventListener('click', () => {
+    const current = localStorage.getItem('glass') || initialMode;
+    const next = current === 'liquid' ? 'frosted' : 'liquid';
+    localStorage.setItem('glass', next);
+    updateGlassButton(next);
+
+    // notify other scripts (and other tabs via storage event)
+    window.dispatchEvent(new CustomEvent('glass-mode-change', { detail: next }));
+  });
+
+  // Sync button if other tabs change the preference
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'glass') {
+      updateGlassButton(e.newValue || initialMode);
+    }
+  });
 }
 
 // Add smooth scroll behavior for navigation
