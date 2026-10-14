@@ -564,11 +564,11 @@ body.light-mode .btn-primary,body.light-mode .channel-link,body.light-mode .filt
   background: linear-gradient(118deg,#167b78,#315fa5) !important;
   border-color: rgba(35,80,125,.22) !important;
 }
-html.lg-refraction-supported .lg-surface {
+html.lg-refraction-supported .lg-lens-active {
   -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.72);
   backdrop-filter: url(#liquidGlassRefraction) blur(var(--lg-blur)) saturate(1.72);
 }
-html.light-mode.lg-refraction-supported .lg-surface,html:has(body.light-mode).lg-refraction-supported .lg-surface {
+html.light-mode.lg-refraction-supported .lg-lens-active,html:has(body.light-mode).lg-refraction-supported .lg-lens-active {
   -webkit-backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.18);
   backdrop-filter: url(#liquidGlassRefraction) blur(15px) saturate(1.18);
 }
