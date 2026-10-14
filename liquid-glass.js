@@ -26,28 +26,37 @@
     const defs = document.createElementNS(svgNS, 'defs');
     const filter = document.createElementNS(svgNS, 'filter');
     filter.setAttribute('id', 'liquidGlassRefraction');
-    filter.setAttribute('x', '-8%');
-    filter.setAttribute('y', '-8%');
-    filter.setAttribute('width', '116%');
-    filter.setAttribute('height', '116%');
+    filter.setAttribute('x', '-12%');
+    filter.setAttribute('y', '-12%');
+    filter.setAttribute('width', '124%');
+    filter.setAttribute('height', '124%');
     filter.setAttribute('color-interpolation-filters', 'sRGB');
 
-    // One subtle displacement pass. No separate red/green/blue channels.
+    // Tuned turbulence + subtle blur to produce a smoother, thicker "liquid" lens.
     const noise = document.createElementNS(svgNS, 'feTurbulence');
     noise.setAttribute('type', 'fractalNoise');
-    noise.setAttribute('baseFrequency', '0.012 0.018');
-    noise.setAttribute('numOctaves', '1');
+    // slightly lower frequency for larger, softer waves that match the reference image
+    noise.setAttribute('baseFrequency', '0.009 0.014');
+    noise.setAttribute('numOctaves', '2');
     noise.setAttribute('seed', '7');
     noise.setAttribute('result', 'lensMap');
 
+    // Smooth the turbulence map so refraction feels more glassy and less grainy
+    const blur = document.createElementNS(svgNS, 'feGaussianBlur');
+    blur.setAttribute('in', 'lensMap');
+    blur.setAttribute('stdDeviation', '1');
+    blur.setAttribute('result', 'lensBlur');
+
+    // Displace the source graphic using the smoothed turbulence map.
     const displacement = document.createElementNS(svgNS, 'feDisplacementMap');
     displacement.setAttribute('in', 'SourceGraphic');
-    displacement.setAttribute('in2', 'lensMap');
-    displacement.setAttribute('scale', '10');
+    displacement.setAttribute('in2', 'lensBlur');
+    // scale increased from 10 -> 14 for a more noticeable, but still tasteful warp
+    displacement.setAttribute('scale', '14');
     displacement.setAttribute('xChannelSelector', 'R');
     displacement.setAttribute('yChannelSelector', 'G');
 
-    filter.append(noise, displacement);
+    filter.append(noise, blur, displacement);
     defs.append(filter);
     svg.append(defs);
     (document.body || document.documentElement).prepend(svg);
@@ -55,6 +64,7 @@
 
   function init() {
     const root = document.documentElement;
+    // ensure every surface gets the lg-surface helper class
     document.querySelectorAll(surfaceSelectors).forEach(el => el.classList.add('lg-surface'));
 
     // Chromium-only progressive enhancement. Other browsers keep the CSS glass fallback.
@@ -70,13 +80,13 @@
 
     addFilter();
 
-    // Only two large surfaces get the expensive optical effect; no cards/buttons in bulk.
-    const navbar = document.querySelector('.navbar, body > nav');
-    const featurePanel = document.querySelector('.experience-panel, .hero-panel, .hero-card');
-    if (navbar) navbar.classList.add('lg-lens-active');
-    if (featurePanel && featurePanel !== navbar) featurePanel.classList.add('lg-lens-active');
+    // Apply the expensive optical effect to every matched surface. This produces
+    // the iOS‑like liquid refraction across cards, navbar, and other surfaces.
+    const surfaces = Array.from(document.querySelectorAll(surfaceSelectors));
+    surfaces.forEach(el => el.classList.add('lg-lens-active'));
 
-    if (navbar || featurePanel) root.classList.add('lg-refraction-supported');
+    // indicate support on the root so CSS can enable the refraction-backed rules
+    if (surfaces.length) root.classList.add('lg-refraction-supported', 'lg-svg-filter-supported');
   }
 
   if (document.readyState === 'loading') {
